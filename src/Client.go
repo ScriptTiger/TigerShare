@@ -19,7 +19,24 @@ func client() {
 
 		// WritableStreamDefaultWriter
 		writer js.Value
+
+		// Whether GetshowSaveFilePicker is available or not
+		hasPicker bool
 	)
+
+	// Check if showSaveFilePicker is supported
+	hasPicker = !jsGo.Get("showSaveFilePicker").IsUndefined()
+
+	// If showSaveFilePicker is not supported, display notice and disconnect from everything
+	if !hasPicker {
+		app.Set("innerHTML", nil)
+		header := jsGo.CreateElement("h1")
+		header.Set("textContent", "Mobile browsers are not currently supported, but they will be soon!")
+		appAppendChild(header)
+		peer.Call("disconnect")
+		peer.Call("destroy")
+		return
+	}
 
 	// Connect to signaling server
 	peer = jsGo.Get("Peer").New(nil, getOptions())
@@ -71,7 +88,7 @@ func client() {
 
 				// Wipe app area
 				app.Set("innerHTML", nil)
-	
+
 				// File info
 				fileInfo := jsGo.CreateElement("p")
 				fileInfo.Set("textContent", "\""+fileName+"\" ("+jsGo.String.Invoke(fileSize).String()+" bytes)")
