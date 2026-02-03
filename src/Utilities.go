@@ -39,12 +39,23 @@ func getOptions() (map[string]any) {
 	}
 }
 
-// Unreachable download link
-func unreachable() {
+// Page displayed when download link is unreachable
+func unreachablePage() {
 	app.Set("innerHTML", nil)
 	header := jsGo.CreateElement("h1")
 	header.Set("textContent", "The link is unreachable!")
 	appAppendChild(header)
+	peer.Call("disconnect")
+	peer.Call("destroy")
+}
+
+// Page displayed when download interrupted 
+func tryAgainPage() {
+	app.Set("innerHTML", nil)
+	header := jsGo.CreateElement("h1")
+	header.Set("textContent", "Your download has failed!")
+	appAppendChild(header)
+	appAppendChild(jsGo.CreateButton("Try again", func() {jsGo.Location.Set("href", urlOrigin)}))
 	peer.Call("disconnect")
 	peer.Call("destroy")
 }
