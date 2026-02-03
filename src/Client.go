@@ -59,7 +59,7 @@ func client() {
 		conn.Call("on", "close", jsGo.SimpleProcOf(func() {if !complete {unreachablePage()}}))
 
 		// Start timeout timer
-		jsGo.SetTimeout(jsGo.SimpleProcOf(func() {if !connected{unreachablePage()}}), 10000)
+		jsGo.SetTimeout(jsGo.SimpleProcOf(func() {if !connected{unreachablePage()}}), 5000)
 
 		// Data connection event listener
 		conn.Call("on", "data", jsGo.ProcOf(func(data []js.Value) {
