@@ -84,7 +84,7 @@ func client() {
 
 				// Set up element to display progress
 				displayProgress = jsGo.CreateElement("h2")
-				displayProgress.Set("textContent", "0 B out of "+fileSizeStr)
+				displayProgress.Set("textContent", "0% (0 B/"+fileSizeStr+")")
 				appAppendChild(displayProgress)
 
 				// Signal server to start sending file
@@ -95,7 +95,7 @@ func client() {
 			updateProgress := func() {
 				progress += chunkSize
 				if progress > fileSize {progress = fileSize}
-				displayProgress.Set("textContent", byteconv(progress)+" out of "+fileSizeStr)
+				displayProgress.Set("textContent", jsGo.Number.New((float64(progress)/float64(fileSize))*100).Call("toFixed", 0).String()+"% ("+byteconv(progress)+"/"+fileSizeStr+")")
 			}
 
 			// Get file name from server
