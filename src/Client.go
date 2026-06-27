@@ -16,6 +16,7 @@ func client() {
 		complete bool
 		progress, chunkCount int
 		displayProgress js.Value
+		fileSizeStr string
 
 		// WritableStreamDefaultWriter
 		writer js.Value
@@ -83,7 +84,7 @@ func client() {
 
 				// Set up element to display progress
 				displayProgress = jsGo.CreateElement("h2")
-				displayProgress.Set("textContent", "0 bytes out of "+jsGo.String.Invoke(fileSize).String())
+				displayProgress.Set("textContent", "0 B out of "+fileSizeStr)
 				appAppendChild(displayProgress)
 
 				// Signal server to start sending file
@@ -94,7 +95,7 @@ func client() {
 			updateProgress := func() {
 				progress += chunkSize
 				if progress > fileSize {progress = fileSize}
-				displayProgress.Set("textContent", jsGo.String.Invoke(progress).String()+" bytes out of "+jsGo.String.Invoke(fileSize).String())
+				displayProgress.Set("textContent", byteconv(progress)+" out of "+fileSizeStr)
 			}
 
 			// Get file name from server
@@ -107,13 +108,14 @@ func client() {
 			// Get file size from server, and then present file info and download button
 			if fileSize == 0 {
 				fileSize = jsGo.Number.Invoke(data[0]).Int()
+				fileSizeStr = byteconv(fileSize)
 
 				// Wipe app area
 				app.Set("innerHTML", nil)
 
 				// File info
 				fileInfo := jsGo.CreateElement("p")
-				fileInfo.Set("textContent", "\""+fileName+"\" ("+jsGo.String.Invoke(fileSize).String()+" bytes)")
+				fileInfo.Set("textContent", "\""+fileName+"\" ("+fileSizeStr+")")
 				appAppendChild(fileInfo)
 
 				// Download button for desktop with writeable stream

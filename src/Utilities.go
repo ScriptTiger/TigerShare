@@ -59,3 +59,11 @@ func tryAgainPage() {
 	peer.Call("disconnect")
 	peer.Call("destroy")
 }
+
+// Function to convert file sizes
+func byteconv(fileSize int) (string) {
+	if fileSize > 1073741824 {return jsGo.Number.New(float64(fileSize)/1073741824).Call("toFixed", 2).String()+" GB"}
+	if fileSize > 1048576 {return jsGo.Number.New(float64(fileSize)/1048576).Call("toFixed", 2).String()+" MB"}
+	if fileSize > 1024 {return jsGo.String.Invoke(fileSize/1024).String()+" KB"}
+	return jsGo.String.Invoke(fileSize).String()+" B"
+}
