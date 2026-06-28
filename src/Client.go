@@ -198,7 +198,10 @@ func client() {
 						},
 
 						// If there was a problem receiving and writing chunk, update page and disconnect from everything
-						func(fail js.Value) {tryAgainPage()},
+						func(fail js.Value) (any) {
+							tryAgainPage()
+							return nil
+						},
 					)
 
 				// Store chunks in indexedDB on mobile browsers, and then reassemble chunks before writing to disk
